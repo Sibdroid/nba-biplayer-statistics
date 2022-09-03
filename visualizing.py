@@ -100,9 +100,9 @@ def draw_bar_plot(ax: plt.Axes,
         ValueError: if either of keep_color and neutral_color arguments
         cannot be interpreted as a color.
     """
-    #types = ["matplotlib.pyplot.Axes", "list", "list", "list"]
-    #docs.check_function_args(*docs.get_args(draw_bar_plot, locals()), types)
-    # write a type-check piece of code for keep_color and neutral_color
+    types = ["matplotlib.pyplot.Axes", ["list", "tuple"], ["list", "tuple"],
+             ["list", "tuple"], "float"]
+    docs.check_function_args(*docs.get_args(draw_bar_plot, locals()), types)
     conditions = [keep_color is not None,
                   neutral_color is not None]
     for color, percentage, point in zip(colors, percentages, [180, 190, 200, 210]):
@@ -147,20 +147,14 @@ def draw_final_plot(ax: plt.Axes,
     types = ["matplotlib.pyplot.Axes", "matplotlib.pyplot.Axes",
              "tuple", "tuple", "tuple", "str"]
     docs.check_function_args(*docs.get_args(draw_final_plot, locals()), types)
-    # write a type-check piece of code for inner df_tuples
     ticks = [f"{int(i)}" for i in np.linspace(0, 180, 19)]
     df_tuple = [i for i, j in zip(df_tuples, colors) if j == keep_color][0]
     draw_bar_plot(ax, colors, percentages, [180, 190, 200, 210], 8.9, 
-                  keep_color, "#CCCCCC")
+                  keep_color, "#E0E0E0")
     for df in df_tuple:
         draw_scatter_plot(ax, df, [0, 220], [0, 180], 23, 19,
                           ticks + ([""] * 4), ticks, "#A3A3A3",
                           "--", 1.5, 5, ([0, 180], [0, 180]))
-    #for i in range(0, 230, 10):
-    #    color = "#A3A3A3" if i <= 180 else "#FFFFFF"
-    #    width = 0.25 if i <= 180 else 1.5
-    #    ax.vlines(i, 0, 180, lw = width, colors = [color])
-    #    ax.hlines(i, 0, 180, lw = width, colors = [color])
     for i in range(0, 230, 10):
         ax.vlines(i, 0, 180, lw = 0.15, colors = ["#A3A3A3"])
         if i <= 180:
@@ -216,7 +210,7 @@ def draw_gif(player_codes: Tuple[int],
         df = df.reset_index()
     colors = ["#EF798A", "#68C5DB", "#ABA2E9", "#666666"]
     (percentages, df_tuples,
-     colors, text_ends) = parsing.get_final_data(df, colors, "#CCCCCC", player_names)
+     colors, text_ends) = parsing.get_final_data(df, colors, "#E0E0E0", player_names)
     results = ["best", "second-best", "second-worst", "worst"]
     file_names = []
     for color, text_end, result in zip(colors, text_ends, results):
