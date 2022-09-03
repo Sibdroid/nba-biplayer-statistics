@@ -49,15 +49,10 @@ def get_stats(team_or_code: Union[str, int], year: int) -> pd.DataFrame:
     except ValueError:
         raise ValueError("Invalid argument(s) entered, statistics not recognized.")
     data = data[columns]
-    # double dropna() is necessary as score_to_tuple returns
-    # None if the value doesn't fit
     data = data.dropna(axis = 0)
     data[columns[1]] = data[columns[1]].apply(lambda x: utils.score_to_tuple(x))
     data = data.dropna(axis = 0)
-    # if there are empty rows (usually, they are caused by a game being
-    # postponed), they should be deleted not to cause trouble later
     data = data[data[columns[1]].map(lambda x: len(x) != 0)]
-    # i-1 is used to insure that x and y will be displayed correctly
     for i, name in enumerate("xy"):
         data[name] = [j[1-i] for j in data[columns[1]]]
     if isinstance(team_or_code, str):
@@ -160,11 +155,8 @@ def get_comparative_stats(players: Tuple[int, int],
     df_players = [get_stats(player, year) for player in players
                   if time.sleep(3) == None]
     df_team = get_stats(team, year)
-    # keep only those rows which are in the dataframe for total ream results
-    # (to remove preseason and playoff games), remove empty values
     df_players = [df_player.apply(lambda x: utils.keep_row_if_in_df(df_team, x, x[:-1]),
                                   axis = 1).dropna(axis = 0) for df_player in df_players]
-    # drop the unnecessary score column, convert all to int
     df_players = [i.drop("score", axis = 1) for i in df_players]
     df_players = [i.apply(pd.to_numeric, errors = "ignore")
                   for i in df_players]
@@ -192,8 +184,6 @@ def get_plotting_dfs(df: pd.DataFrame,
     """
     types = ["pandas.DataFrame", "str", "str"]
     docs.check_function_args(*docs.get_args(get_plotting_dfs, locals()), types)
-    # divide the df in two based on color, then fill color and ecolor columns
-    # of the df where the color doesn't match with neutral color
     color_criteria = df["color"] == color
     df_color_yes, df_color_no = df[color_criteria], df[~color_criteria]
     # used to prevent SettingWithCopyWarning
