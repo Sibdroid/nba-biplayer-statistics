@@ -218,8 +218,8 @@ def draw_gif(player_codes: Tuple[int],
                         df_tuples, colors, color)
         team_name = utils.code_to_team_name(team_code)
         ax.set_title(f"{team_name} were {result} {text_end}", fontsize = 10)
-        ax.set_xlabel(f"Points scored by {team_name}", loc = "left")
-        ax.set_ylabel("Points scored by opponent team", loc = "bottom")
+        ax.set_xlabel("Points scored by opponent team", loc = "left")
+        ax.set_ylabel(f"Points scored by {team_name}", loc = "bottom")
         plt.savefig(f"{color}.png")
         file_names += [f"{color}.png"]
         ax.clear()
